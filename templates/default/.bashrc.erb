@@ -1,0 +1,49 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+
+export INFORMIXDIR=/opt/Informix_Software_Bundle
+export INFORMIXSERVER=ol_informix1210
+export PATH=$PATH:$INFORMIXDIR/bin
+
+function which_db() {
+        echo -e "---------------------------------------------------------"
+        echo -e "which DB do you want to connect to?"
+        echo -e "---------------------------------------------------------"
+        echo -e "1) for efdb"
+        echo -e "2) for efdn"
+        echo -e "3) Quit!"
+
+        read -e -p "Select 1: " choice
+
+        if [ "$choice" == "1" ]; then
+            export ONCONFIG=onconfig.efdb && echo ONCONFIG  $ONCONFIG
+            export DBSERVERNAME=efdb_tcp && echo DBSERVER  $DBSERVER
+			export INFORMIXSERVER=efdb_tcp && echo INFORMIXSERVER  $INFORMIXSERVER
+			grep ^SERVERNUM /opt/Informix_Software_Bundle/etc/onconfig.efdb
+			grep ^ROOTPATH /opt/Informix_Software_Bundle/etc/onconfig.efdb
+			grep ^MSGPATH /opt/Informix_Software_Bundle/etc/onconfig.efdb
+        elif [ "$choice" == "2" ]; then
+            export ONCONFIG=onconfig.efdw && echo ONCONFIG $ONCONFIG
+            export INFORMIXSERVER=efdw_tcp && echo INFORMIXSERVER  $INFORMIXSERVER
+			grep ^SERVERNUM /opt/Informix_Software_Bundle/etc/onconfig.efdw
+			grep ^ROOTPATH /opt/Informix_Software_Bundle/etc/onconfig.efdw
+			grep ^MSGPATH /opt/Informix_Software_Bundle/etc/onconfig.efdw
+        elif [ "$choice" == "3" ]; then
+            echo "BE Mindful which DB you are on!"
+        else
+            echo "Please select 1, 2, or 3." && sleep 3
+            clear && ask_user
+        fi
+}
+
+# invoke for ENV
+which_db
